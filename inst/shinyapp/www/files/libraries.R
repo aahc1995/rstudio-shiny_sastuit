@@ -23,7 +23,7 @@ library(DT)
 #Text mining packages
 library(tm)
 library(SnowballC)
-library(readr)
+#library(readr)
 library(dplyr)
 library(stringi)
 library(textclean)
