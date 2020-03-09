@@ -12,7 +12,7 @@ body <- dashboardBody(
   fluidRow(
     column(width = 12,
            box(
-             title = "Tweetss", width = NULL, status = "primary",
+             title = "Tweets", width = NULL, status = "primary",
              hr(),
              textOutput("nowRegistrosTuits"),
              hr(),
@@ -906,7 +906,7 @@ server <- function(input, output,session) {
     
   })
   
-  dataModal <- function(failed = FALSE) {
+  dataModal <- function() {
     modalDialog(
       title = title_APITwitter_,
       textInput("name_app",  label = "", placeholder = label_name_app),
@@ -1000,7 +1000,7 @@ server <- function(input, output,session) {
     )
     
     if(is.null(rate_limit(token)[164,3])){
-      condicion = FALSE
+      condicion_token <<- FALSE
       sendSweetAlert(
         session = session,
         title = "¡Error!",
@@ -1008,7 +1008,7 @@ server <- function(input, output,session) {
         type = "error"
       ) 
     }else if(rate_limit(token)[164,3] == 0){
-      condicion = FALSE
+      condicion_token <<- FALSE
       sendSweetAlert(
         session = session,
         title = "¡Error!",
