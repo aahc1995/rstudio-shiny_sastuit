@@ -12,7 +12,7 @@ body <- dashboardBody(
   fluidRow(
     column(width = 12,
            box(
-             title = "Tweets", width = NULL, status = "primary",
+             title = "Tweetss", width = NULL, status = "primary",
              hr(),
              textOutput("nowRegistrosTuits"),
              hr(),
