@@ -921,8 +921,7 @@ server <- function(input, output,session) {
   observeEvent(input$sent,{
     # credeciales API Twitter
     #source("www/files/createTokenApiTwitter.R")
-    if(condicion_token){
-      
+    if(condicion_token){     
     
     token <- create_token(
       app = "app_sastuit_demo",
@@ -931,16 +930,21 @@ server <- function(input, output,session) {
       access_token = "1140654817125130241-7fsWdykgXUDH51tQs8mo5AwvGfElY5",
       access_secret = "pkYegO3fQtnIjsG1U1KhbLOgfzd6ML6NpPTT6MWBHEoX0"
     )
-    
-    if(is.null(rate_limit(token)[164,3])){
-      condicion_token <<- FALSE
-      sendSweetAlert(
+      
+    Sys.sleep(10)
+      
+    var_rate_limit <- rate_limit(token, "search_tweets")[1,2]
+      
+    Sys.sleep(10)
+      
+    if(is.null(var_rate_limit)){
+          sendSweetAlert(
         session = session,
         title = "¡Error!",
         text = label_error_token,
         type = "error"
       ) 
-    }else if(rate_limit(token)[164,3] == 0){
+    }else if(var_rate_limit == 0){
       condicion_token <<- FALSE
       sendSweetAlert(
         session = session,
@@ -948,7 +952,7 @@ server <- function(input, output,session) {
         text = label_error_ratelimit,
         type = "error"
       ) 
-    }else if(rate_limit()[164,3] != 0){
+    }else if(var_rate_limit != 0){
     
     condicion = TRUE
     
