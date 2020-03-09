@@ -289,7 +289,7 @@ server <- function(input, output,session) {
   var_lang_CombinaFiles <<- FALSE
   var_bandera_clean_text <<- FALSE
   
-  condicion_token<<-FALSE
+  condicion_token<<-TRUE
   
   #-----------------------------------------------------------------------------
   # change language
@@ -991,13 +991,13 @@ server <- function(input, output,session) {
     if(condicion_token){
       
     
-    token <- create_token(
-      app = name_app_,
-      consumer_key = api_key,
-      consumer_secret = api_secret,
-      access_token = acc_token,
-     access_secret = acc_secret,set_renv = FALSE
-    )
+token <- create_token(
+  app = "app_sastuit_demo",
+  consumer_key = "ZCYjIZ1MIs7AMV0TGKoxJG2xk",
+    consumer_secret = "V1o9VDV0xVHcp926zgfB5blChnaTNbhpyWbGM8b69swbzIUK3X",
+  access_token = "1140654817125130241-7fsWdykgXUDH51tQs8mo5AwvGfElY5",
+  access_secret = "pkYegO3fQtnIjsG1U1KhbLOgfzd6ML6NpPTT6MWBHEoX0"
+)
     
     if(is.null(rate_limit(token)[164,3])){
       condicion_token <<- FALSE
