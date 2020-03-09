@@ -16,6 +16,15 @@ title_panel_inicio_ <- "Inicio"
 # ---------------------------------------------------------------
 title_panel_dtweets_ <- "Descargar tweets"
 
+title_APITwitter_ <- "Credenciales de #Twitter API"
+label_name_app <- "Nombre de la App"
+label_consumerKey <- "Agregar Consumer Key"
+label_consumerSecret <- "Agregar Consumer Secret"
+label_accessToken <- "Agregar Access Token"
+label_accessSecret <- "Agregar Access Secret"
+label_error_token <- "No se pudo autenticar con Twitter"
+label_error_ratelimit <- "Espere 15 min para volver a buscar"
+label_cancel <- "Cancelar"
 labelHashTag_ <- "#HashTag del tema"
 labelnumLimite_ <- trans_format_text("Número de tuits","UTF-8","ISO-8859-1")
 labelanywhere <- "TODAS PARTES"
