@@ -1151,6 +1151,7 @@ server <- function(input, output,session) {
         text = label_error_token,
         type = "error"
       ) 
+    }
     
   })
 }
