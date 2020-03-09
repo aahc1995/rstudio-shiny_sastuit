@@ -1145,8 +1145,12 @@ server <- function(input, output,session) {
     }
     }
     }else{
-      cat("ingrese keys")
-    }
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = label_error_token,
+        type = "error"
+      ) 
     
   })
 }
