@@ -552,74 +552,7 @@ server <- function(input, output,session) {
   #})
   #-----------------------------------------------------------------------------
   
-  dataModal <- function(failed = FALSE) {
-    modalDialog(
-      title = "Enter API keys Twitter",
-      #textInput("txt", "API key"),
-      h4(textInput("name_app",  label = "", placeholder = 'Nombre de la APP')),
-      h4(textInput("api_key",  label = "", placeholder = 'API key')),
-      h4(textInput("api_secret", label = "", value = "", placeholder = 'API secret key')),
-      #h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "", placeholder = 'Access token ')),
-      #h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "", placeholder = 'Access token secret')),
-      footer = tagList(
-        if(exists('apiKey')){
-          h4(textInput("txt",  label = "",value = apiKey, placeholder = 'API key'))
-          
-          sendSweetAlert(
-            session = session,
-            title = "Token Creado",
-            text = "Ya hay",
-            type = "success"
-          ) 
-          #verbatimTextOutput("existe")
-        },
-        
-        modalButton("Cancel"),
-        actionButton("envio", "OK")
-      )
-      
-    )
-  }
-  
-  observeEvent(input$apiKeys, {
-    
-    showModal(dataModal())
-  })
-  observeEvent(input$envio, {
-    name_app <<- trim(input$name_app)
-    api_key <<- trim(input$api_key)
-    api_secret <<- trim(input$api_secret)
-    if(!isTruthy(name_app)){
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = "ingrese name_app",
-        type = "error"
-      ) 
-      
-    }else if(!isTruthy(trim(input$api_key))){
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = "ingrese api_key",
-        type = "error"
-      )}else if(!isTruthy(trim(input$api_secret))){
-        sendSweetAlert(
-          session = session,
-          title = "¡Error!",
-          text = "ingrese api_secret",
-          type = "error"
-        ) 
-      
-    }
-    
-    else{
-     # showModal(popupModal(failed = TRUE))
-      removeModal()
-    }
-  })
-
-  
+ 
   observeEvent(input$btn_modelo_IA, {
     # When the button is clicked, wrap the code in a call to `withBusyIndicatorServer()`
     
@@ -991,13 +924,13 @@ server <- function(input, output,session) {
     if(condicion_token){
       
     
-token <- create_token(
-  app = "app_sastuit_demo",
-  consumer_key = "ZCYjIZ1MIs7AMV0TGKoxJG2xk",
-    consumer_secret = "V1o9VDV0xVHcp926zgfB5blChnaTNbhpyWbGM8b69swbzIUK3X",
-  access_token = "1140654817125130241-7fsWdykgXUDH51tQs8mo5AwvGfElY5",
-  access_secret = "pkYegO3fQtnIjsG1U1KhbLOgfzd6ML6NpPTT6MWBHEoX0"
-)
+    token <- create_token(
+      app = "app_sastuit_demo",
+      consumer_key = "ZCYjIZ1MIs7AMV0TGKoxJG2xk",
+        consumer_secret = "V1o9VDV0xVHcp926zgfB5blChnaTNbhpyWbGM8b69swbzIUK3X",
+      access_token = "1140654817125130241-7fsWdykgXUDH51tQs8mo5AwvGfElY5",
+      access_secret = "pkYegO3fQtnIjsG1U1KhbLOgfzd6ML6NpPTT6MWBHEoX0"
+    )
     
     if(is.null(rate_limit(token)[164,3])){
       condicion_token <<- FALSE
