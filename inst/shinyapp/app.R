@@ -931,11 +931,11 @@ server <- function(input, output,session) {
       access_secret = "pkYegO3fQtnIjsG1U1KhbLOgfzd6ML6NpPTT6MWBHEoX0"
     )
       
-    Sys.sleep(10)
+    #Sys.sleep(10)
       
     var_rate_limit <- rate_limit(token, "search_tweets")[1,2]
       
-    Sys.sleep(10)
+    #Sys.sleep(10)
       
     if(is.null(var_rate_limit)){
           sendSweetAlert(
