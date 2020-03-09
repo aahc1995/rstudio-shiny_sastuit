@@ -953,6 +953,37 @@ server <- function(input, output,session) {
         type = "error"
       ) 
     }else if(var_rate_limit != 0){
+      
+          observeEvent(input$name_app, {  
+      
+      updateTextInput(session, "name_app", value =name_app_)
+      
+    })
+      
+    observeEvent(input$api_key, { 
+      
+      updateTextInput(session, "api_key", value =api_key)
+      
+    })
+    
+    observeEvent(input$api_key, { 
+      
+      updateTextInput(session, "api_secret", value =api_secret)
+      
+    })
+    
+    observeEvent(input$acc_token, { 
+      
+      updateTextInput(session, "acc_token", value =acc_token)
+      
+    })
+    
+    
+    observeEvent(input$acc_secret, { 
+      
+      updateTextInput(session, "acc_secret", value =acc_secret)
+      
+    })
     
     condicion = TRUE
     
