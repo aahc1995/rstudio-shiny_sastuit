@@ -996,7 +996,8 @@ server <- function(input, output,session) {
       consumer_key = api_key,
       consumer_secret = api_secret,
       access_token = acc_token,
-     access_secret = acc_secret,set_renv = FALSE
+     access_secret = acc_secret
+      #,set_renv = FALSE
     )
     
     if(is.null(rate_limit(token)[164,3])){
