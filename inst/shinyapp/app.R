@@ -123,7 +123,7 @@ ui <- fluidPage(
                
                titlePanel(title =uiOutput("titulo_panel_main")),
                sidebarPanel(
-                 actionButton("apiKeys", "API keys",class = "button"),
+                 actionButton("apiKeys", "Twitter API keys",class = "button"),
                  
                  h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "")),
                  
@@ -288,6 +288,8 @@ server <- function(input, output,session) {
   var_lang_sent <<- FALSE
   var_lang_CombinaFiles <<- FALSE
   var_bandera_clean_text <<- FALSE
+  
+  condicion_token<<-FALSE
   
   #-----------------------------------------------------------------------------
   # change language
@@ -906,21 +908,17 @@ server <- function(input, output,session) {
   
   dataModal <- function(failed = FALSE) {
     modalDialog(
-      title = "Enter API keys Twitter",
-      #textInput("txt", "API key"),
-      h4(textInput("name_app",  label = "", placeholder = 'Nombre de la APP')),
-      h4(textInput("api_key",  label = "", placeholder = 'API key')),
-      h4(textInput("api_secret", label = "", value = "", placeholder = 'API secret key')),
-      h4(textInput("acc_token", label = "", value = "", placeholder = 'acc_token')),
-      h4(textInput("acc_secret", label = "", value = "", placeholder = 'acc_secret')),
+      title = title_APITwitter_,
+      textInput("name_app",  label = "", placeholder = label_name_app),
+      h4(textInput("api_key",  label = "", placeholder = label_consumerKey)),
+      h4(textInput("api_secret", label = "", value = "", placeholder = label_consumerSecret)),
+      h4(textInput("acc_token", label = "", value = "", placeholder = label_accessToken)),
+      h4(textInput("acc_secret", label = "", value = "", placeholder = label_accessSecret)),
       
-      #h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "", placeholder = 'Access token ')),
-      #h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "", placeholder = 'Access token secret')),
       footer = tagList(
-        modalButton("Cancel"),
+        modalButton(label_cancel),
         actionButton("envio", "OK")
       )
-      
     )
   }
   
@@ -928,62 +926,96 @@ server <- function(input, output,session) {
     
     showModal(dataModal())
   })
+  
+
   observeEvent(input$envio, {
     name_app_ <<- trim(input$name_app)
     api_key <<- trim(input$api_key)
     api_secret <<- trim(input$api_secret)
     acc_token <<- trim(input$acc_token)
     acc_secret <<- trim(input$acc_secret)
+    
+
+
     if(!isTruthy(name_app_)){
+      
       sendSweetAlert(
         session = session,
         title = "¡Error!",
-        text = "ingrese name_app",
+        text = label_name_app,
         type = "error"
-      ) 
+      )
+
       
     }else if(!isTruthy(trim(input$api_key))){
       sendSweetAlert(
         session = session,
         title = "¡Error!",
-        text = "ingrese api_key",
+        text = label_consumerKey,
         type = "error"
       )}else if(!isTruthy(trim(input$api_secret))){
         sendSweetAlert(
           session = session,
           title = "¡Error!",
-          text = "ingrese api_secret",
+          text = label_consumerSecret,
+          type = "error"
+        ) 
+        
+      }else if(!isTruthy(trim(input$acc_token))){
+        sendSweetAlert(
+          session = session,
+          title = "¡Error!",
+          text = label_accessToken,
+          type = "error"
+        ) 
+        
+      }else if(!isTruthy(trim(input$acc_secret))){
+        sendSweetAlert(
+          session = session,
+          title = "¡Error!",
+          text = label_accessSecret,
           type = "error"
         ) 
         
       }
     
     else{
+
       # showModal(popupModal(failed = TRUE))
-      removeModal()
+      #removeModal()
     }
   })
   observeEvent(input$sent,{
     # credeciales API Twitter
     #source("www/files/createTokenApiTwitter.R")
+    if(condicion_token){
+      
     
     token <- create_token(
       app = name_app_,
       consumer_key = api_key,
       consumer_secret = api_secret,
       access_token = acc_token,
-     access_secret = acc_secret, set_renv = FALSE
+     access_secret = acc_secret,set_renv = FALSE
     )
     
-   # if(rate_limit(token)[164,3] == 0){
-      
-  #    sendSweetAlert(
-  #      session = session,
-  #      title = "¡Error!",
-  #      text = "Espere 15 min para volver a buscar",
-  #      type = "error"
-  #    ) 
-  #  }else if(rate_limit()[164,3] != 0){
+    if(is.null(rate_limit(token)[164,3])){
+      condicion = FALSE
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = label_error_token,
+        type = "error"
+      ) 
+    }else if(rate_limit(token)[164,3] == 0){
+      condicion = FALSE
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = label_error_ratelimit,
+        type = "error"
+      ) 
+    }else if(rate_limit()[164,3] != 0){
     
     condicion = TRUE
     
@@ -1111,7 +1143,10 @@ server <- function(input, output,session) {
         }
       )
     }
-  #}
+    }
+    }else{
+      cat("ingrese keys")
+    }
     
   })
 }
