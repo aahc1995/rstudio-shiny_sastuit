@@ -17,12 +17,14 @@ body, label, input, button, select {
   font-family: "Arial";
 }
 
-#sent { 
+#sent,#apiKeys{ 
   display: block;
   margin: 0 auto;
   margin-right:center;
   background-color: #4CAF50;
 }
+
+
 
 #btn_modelo_IA {
 width: 100px;
@@ -64,10 +66,7 @@ margin-left: auto;
   font-weight:bolder;
   text-align:center;
 }
-.title_panel_predict_{
-  font-weight:bolder;
-  text-align:left;
-}
+
 
 .btn-primary {
   background: #4285F4; }
