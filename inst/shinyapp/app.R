@@ -1,313 +1,553 @@
 
 
+
 # libraries
 source("www/files/libraries.R")
 
 source("www/files/indicator/helpers.R")
 
 
-# Define UI for application 
+# Define UI for application
 
-body <- dashboardBody(
-  fluidRow(
-    column(width = 12,
-           box(
-             title = "Tweets", width = NULL, status = "primary",
-             hr(),
-             textOutput("nowRegistrosTuits"),
-             hr(),
-             div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("mytable"))
-           )
-    ),
-    column(3, align="right", offset = 9, downloadButton('downloadData',uiOutput('btn_download'),class = "btn_download_search"))
-    
-    #,tags$style(type='text/css', "#downloadData { width:100%; margin-top: 5px}")
-  )
-)
-
-tablaLimpiezaDatos <- dashboardBody(
-  fluidRow(
-    column(width = 12,
-           box(
-             title = uiOutput("title_tlimpieza") , width = NULL, status = "primary",
-             hr(),
-             textOutput("nowRegistros2"),
-             hr(),
-             div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("tablaLimpiezaDatos"))
-           )
-    ),
-    column(3, align="right", offset = 9, downloadButton('downloadDataLimpiezaDatos', uiOutput('btn_download_clean')))
-  )
-)
-tablaCombinaFiles <- dashboardBody(
-  fluidRow(
-    column(width = 12,
-           box(
-             title = uiOutput("title_tCombinaFiles"), width = NULL, status = "primary",
-             hr(),
-             textOutput("nowRegistros"),
-             hr(),
-             div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("preViewCombinaDatos"))
-             
-           )
-    ),
-    column(3, align="right", offset = 9, downloadButton('downloadDataCombinaDatos',  uiOutput('btn_download_rbind')))
-  )
-)
-
-modelo_IA <- dashboardBody(
-  div(class="result",h3(uiOutput("label_result"))),
-
-  panel(
-  fluidRow(
-    column(width = 12,align="center",
-           box(
-            title = uiOutput("label_result_sa"), width = NULL, status = "primary",
-            tableOutput('t_modelo_IA') ,
-            #div(style = 'overflow-x: scroll', tableOutput('t_modelo_IA'))
-            # Horizontal line ----
-            tags$hr()
-           )
-    ),
-    column(width = 6,align="center",
-           box(
-             title = uiOutput("label_result_frehash"), width = NULL, status = "primary",
-             div(style = 'height:540px; width:350px; overflow-x: scroll', DT::dataTableOutput("t_hashtag"))
-           ),
-           # Horizontal line ----
-           tags$hr()
-    ),
-    column(width = 6,align="center",
-           box(
-             title = uiOutput("label_result_country") , width = NULL, status = "primary",
-             #div(style = 'overflow-x: scroll', DT::dataTableOutput("t_location"))
-             div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("t_location"))
-             
-           ),
-           # Horizontal line ----
-           tags$hr()
+body <- dashboardBody(fluidRow(
+  column(
+    width = 12,
+    box(
+      title = "Tweets",
+      width = NULL,
+      status = "primary",
+      hr(),
+      textOutput("nowRegistrosTuits"),
+      hr(),
+      div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("mytable"))
     )
-    ,
-    # Horizontal line ----
-    tags$hr()
+  ),
+  column(
+    3,
+    align = "right",
+    offset = 9,
+    downloadButton('downloadData', uiOutput('btn_download', inline = TRUE))
   )
-
+  
+  ,
+  tags$style(
+    type = 'text/css',
+    "#downloadData { width:100%; margin-top: 10px; background-color: #E05F3D;border: none; }"
+  )
 ))
+
+tablaLimpiezaDatos <- dashboardBody(fluidRow(
+  column(
+    width = 12,
+    box(
+      title = uiOutput("title_tlimpieza") ,
+      width = NULL,
+      status = "primary",
+      hr(),
+      textOutput("nowRegistros2"),
+      hr(),
+      div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("tablaLimpiezaDatos"))
+    )
+  ),
+  column(
+    3,
+    align = "right",
+    offset = 9,
+    downloadButton(
+      'downloadDataLimpiezaDatos',
+      uiOutput('btn_download_clean', inline = TRUE)
+    )
+  )
+  ,
+  tags$style(
+    type = 'text/css',
+    "#downloadDataLimpiezaDatos { width:100%; margin-top: 10px; background-color: #E05F3D;border: none; }"
+  )
+  
+))
+tablaCombinaFiles <- dashboardBody(fluidRow(
+  column(
+    width = 12,
+    box(
+      title = uiOutput("title_tCombinaFiles"),
+      width = NULL,
+      status = "primary",
+      hr(),
+      textOutput("nowRegistros"),
+      hr(),
+      div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("preViewCombinaDatos"))
+      
+    )
+  ),
+  column(
+    3,
+    align = "right",
+    offset = 9,
+    downloadButton(
+      'downloadDataCombinaDatos',
+      uiOutput('btn_download_rbind', inline = TRUE)
+    )
+  )
+  ,
+  tags$style(
+    type = 'text/css',
+    "#downloadDataCombinaDatos { width:100%; margin-top: 10px; background-color: #E05F3D;border: none; }"
+  )
+  
+))
+
+modelo_IA <- dashboardBody(div(class = "result", h3(uiOutput("label_result"))),
+                           
+                           panel(fluidRow(
+                             column(
+                               width = 12,
+                               align = "center",
+                               box(
+                                 title = uiOutput("label_result_sa"),
+                                 width = NULL,
+                                 status = "primary",
+                                 tableOutput('t_modelo_IA') ,
+                                 #div(style = 'overflow-x: scroll', tableOutput('t_modelo_IA'))
+                                 # Horizontal line ----
+                                 tags$hr()
+                               ),
+                               #
+                               column(
+                                 3,
+                                 align = "right",
+                                 offset = 9,
+                                 downloadButton(
+                                   'downloadDataClassification',
+                                   uiOutput('btn_download_Classification', inline = TRUE)
+                                 )
+                               )
+                               ,
+                               tags$style(
+                                 type = 'text/css',
+                                 "#downloadDataClassification { width:100%;  background-color: #E05F3D;border: none; }"
+                               )
+                               
+                             ),
+                             column(
+                               width = 6,
+                               align = "center",
+                               box(
+                                 title = uiOutput("label_result_frehash"),
+                                 width = NULL,
+                                 status = "primary",
+                                 div(style = 'height:540px; width:350px; overflow-x: scroll', DT::dataTableOutput("t_hashtag"))
+                               ),
+                               # Horizontal line ----
+                               tags$hr()
+                             ),
+                             column(
+                               width = 6,
+                               align = "center",
+                               box(
+                                 title = uiOutput("label_result_country") ,
+                                 width = NULL,
+                                 status = "primary",
+                                 #div(style = 'overflow-x: scroll', DT::dataTableOutput("t_location"))
+                                 div(style = 'height:540px;overflow-x: scroll', DT::dataTableOutput("t_location"))
+                                 
+                               ),
+                               # Horizontal line ----
+                               tags$hr()
+                             )
+                             ,
+                             # Horizontal line ----
+                             tags$hr()
+                           )))
 
 #b64 <- base64enc::dataURI(file="nube.jpeg", mime="image/png")
 ui <- fluidPage(
-  
   #call style
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "css/style.css"),
-    tags$link(rel="shortcut icon", href="images/favicon.ico")
+    tags$link(rel = "shortcut icon", href = "images/favicon.ico")
   ),
-
+  
   # useShinyjs - enable/disabled input
   useShinyjs(),
-
+  
+  
   
   theme = shinytheme("flatly"),
-
+  
   navbarPage(
-    title="SASTuit",
+    title = "SASTuit",
     id = "navbar",
-    collapsible=TRUE, 
-    tabPanel(title = uiOutput("title_panel_inicio"),
-             HTML('<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>')
+    collapsible = TRUE,
+    tabPanel(
+      title = uiOutput("title_panel_inicio"),
+      tags$hr(),
+      tags$br(),
+      panel(fluidRow(
+        align = "center",
+        p(uiOutput("textSASTuit")),
+        HTML(
+          '<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>'
+        ),
+        
+      )),
+      tags$br(),
+      tags$hr()
+      
     ),
-    tabPanel(title = uiOutput("title_panel_dtweets"),
-             panel(
-               
-               # Application title
-               
-               titlePanel(title =uiOutput("titulo_panel_main")),
-               sidebarPanel(
-                 actionButton("apiKeys", "Twitter API keys",class = "button"),
-                 
-                 h4(textInput("txtHashTag", label = h4(uiOutput("labelHashTag")), value = "")),
-                 
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(prettyCheckbox(inputId = "retweet", label = "Retweet",
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(prettyCheckbox(inputId = "ratelimit", label = "Rate limit",
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 
-                 
-                 h4(numericInput("numLimite", label = h4(uiOutput("labelnumLimite")), value = 10)),
-                 
-                 
-                 h4(selectInput("selectIdioma", label = h4(uiOutput("labelselectIdioma")), 
-                                choices = list("-"='-',"ANYWHERE" = 'FALSE',"ES" = 'es', "EN" = 'en'), 
-                                selected = 1)),
-                 
-                 h4(numericInput("max_id", label = h4("Max status_id"), value = "")),
-                 
-                 #dateInput("dateTuit", label = h3("Fecha"), value = "2019-01-01"),
-                 withBusyIndicatorUI(
-                 actionButton("sent", label = uiOutput("labelsent") ,class = "button"))#,
-                 
-                 
-               ),
-               mainPanel(
-                 body
-               )
-               
-             ),
-             HTML('<center><img src="images/sastuit.jpg"  alt="sastuit"></center>')
+    tabPanel(
+      title = uiOutput("title_panel_dtweets"),
+      panel(
+        # Application title
+        
+        titlePanel(title = uiOutput("titulo_panel_main")),
+        sidebarPanel(
+          actionButton("apiKeys", "Twitter API keys"),
+          tags$style(
+            type = 'text/css',
+            "#apiKeys { width:100%; background-color: #73A931;border: none; }"
+          ),
+          #457079
+          
+          h4(textInput(
+            "txtHashTag", label = h4(uiOutput("labelHashTag")), value = ""
+          )),
+          
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(
+            prettyCheckbox(
+              inputId = "retweet",
+              label = "Retweet",
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(
+            prettyCheckbox(
+              inputId = "ratelimit",
+              label = "Rate limit",
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          
+          tags$hr(),
+          
+          h4(numericInput(
+            "numLimite", label = h4(uiOutput("labelnumLimite")), value = 10
+          )),
+          
+          
+          h4(
+            selectInput(
+              "selectIdioma",
+              label = h4(uiOutput("labelselectIdioma")),
+              choices = list(
+                "-" = '-',
+                "ANYWHERE" = 'FALSE',
+                "ES" = 'es',
+                "EN" = 'en'
+              ),
+              selected = 1
+            )
+          ),
+          
+          h4(numericInput(
+            "max_id", label = h4(uiOutput("labelmax_id")), value = ""
+          )),
+          
+          tags$hr(),
+          
+          #dateInput("dateTuit", label = h3("Fecha"), value = "2019-01-01"),
+          withBusyIndicatorUI(actionButton(
+            "sent", label = uiOutput("labelsent") , class = "button"
+          )),
+          tags$style(
+            type = 'text/css',
+            "#sent { width:100%; background-color: #73A931;border: none; }"
+          ),
+          tags$hr(),
+          
+        ),
+        mainPanel(body)
+        
+      ),
+      HTML(
+        '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+      )
     ),
-    tabPanel(title = uiOutput("title_panel_bind_files"),
-             panel(
-               titlePanel(title = uiOutput("title_panel_main_file")),
-               sidebarPanel(
-                 h4(fileInput("csvs",label = h4(uiOutput("labelUploadFiles")), multiple = TRUE,
-                              accept = c(
-                                ".csv"))),
-                 
-                 
-                 h4(selectInput("selectIdiomaCombina", label = h4(uiOutput("labelselectIdiomaCombina")), 
-                                choices = list("-"='-',"ES" = 'es', "EN" = 'en'), 
-                                selected = 1)),
-                 withBusyIndicatorUI(
-                  actionButton("combinaFiles", uiOutput("btn_label_rbind"), class = "button")
-                 ),
-                 mainPanel()
-               ),
-               mainPanel(
-                 tablaCombinaFiles
-               )
-             ),
-             HTML('<center><img src="images/sastuit.jpg"  alt="sastuit"></center>')),
-    tabPanel(title = uiOutput("title_panel_cleaningData"),
-             panel(
-               titlePanel(title =uiOutput("titulo_panel_main_clean")),
-               sidebarPanel(
-                 
-                 column(width = 12,align="center",
-                        h2(uiOutput("title_filters"))
-                 ),
-                
-                 
-                 h4(selectInput("selectIdiomaLimpieza", label = h4(uiOutput("title_language_clean")), 
-                                choices = list("-"='-',"ES" = 'es', "EN" = 'en'), 
-                                selected = 1)),
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(prettyCheckbox("twImgPerfil", label = uiOutput("title_img_profile"),
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 
-                 # Horizontal line ----
-                 tags$hr(),
-
-                 h4(prettyCheckbox(inputId = "twImgPortada", label = uiOutput("title_profilebanners"),
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(prettyCheckbox(inputId = "twUbicacionVacia", label = uiOutput("title_location"),
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(prettyCheckbox(inputId = "twhashtags_f", label = uiOutput("title_hashtagF"),
-                                   thick = TRUE,fill = TRUE,bigger = TRUE, icon = icon("check"))),
-                 
-                 # Horizontal line ----
-                 tags$hr(),
-                 
-                 h4(sliderInput("longtext", label = h4(uiOutput("title_longtext")), min = 0, 
-                             max = 280, value = 0)),
-                 
-
-                 
-                 h4(fileInput("csvs_stopwords",label = h4(uiOutput("title_stopwords")), multiple = FALSE,
-                              accept = c(
-                                ".csv"))),
-                 
-                 actionButton("limpieza", uiOutput("title_btn_clean"),class = "button")
-                 
-               ),
-               mainPanel(
-                 tablaLimpiezaDatos
-               )
-             ),
-             HTML('<center><img src="images/sastuit.jpg"  alt="sastuit"></center>')
+    tabPanel(
+      title = uiOutput("title_panel_bind_files"),
+      panel(
+        titlePanel(title = uiOutput("title_panel_main_file")),
+        sidebarPanel(
+          h4(
+            fileInput(
+              "csvs",
+              label = h4(uiOutput("labelUploadFiles")),
+              multiple = TRUE,
+              accept = c(".csv")
+            ),
+            tags$style(
+              "
+              .btn-file {
+              background-color:#2D9AB6;
+              border: none;
+              pointer-events: none;
+              }
+              
+              .progress-bar {
+              background-color: #2D9AB6;
+              border: none;
+              }
+              
+              "
+            )
+            ),
+          
+          h4(
+            selectInput(
+              "selectIdiomaCombina",
+              label = h4(uiOutput("labelselectIdiomaCombina")),
+              choices = list("-" = '-', "ES" = 'es', "EN" = 'en'),
+              selected = 1
+            )
+          ),
+          withBusyIndicatorUI(actionButton(
+            "combinaFiles", uiOutput("btn_label_rbind"), class = "button"
+          )),
+          tags$style(
+            type = 'text/css',
+            "#combinaFiles { width:100%; background-color: #73A931;border: none; }"
+          ),
+          
+          mainPanel()
+            ),
+        mainPanel(tablaCombinaFiles)
+          ),
+      HTML(
+        '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+      )
+      ),
+    tabPanel(
+      title = uiOutput("title_panel_cleaningData"),
+      panel(
+        titlePanel(title = uiOutput("titulo_panel_main_clean")),
+        sidebarPanel(
+          box(width = 12, align = "center",
+              h2(uiOutput(
+                "title_filters", inline = TRUE
+              )),
+              tags$hr()),
+          
+          # h4(selectInput("selectIdiomaLimpieza", label = h4(uiOutput("title_language_clean")),
+          #               choices = list("-"='-',"ES" = 'es', "EN" = 'en'),
+          #              selected = 1)),
+          # Horizontal line ----
+          
+          
+          h4(
+            prettyCheckbox(
+              "twImgPerfil",
+              label = uiOutput("title_img_profile"),
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(
+            prettyCheckbox(
+              inputId = "twImgPortada",
+              label = uiOutput("title_profilebanners"),
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(
+            prettyCheckbox(
+              inputId = "twUbicacionVacia",
+              label = uiOutput("title_location"),
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(
+            prettyCheckbox(
+              inputId = "twhashtags_f",
+              label = uiOutput("title_hashtagF"),
+              thick = TRUE,
+              fill = TRUE,
+              bigger = TRUE,
+              icon = icon("check")
+            )
+          ),
+          
+          # Horizontal line ----
+          tags$hr(),
+          
+          h4(sliderInput(
+            "longtext",
+            label = h4(uiOutput("title_longtext")),
+            min = 0,
+            max = 280,
+            value = 0
+          )),
+          
+          
+          
+          h4(
+            fileInput(
+              "csvs_stopwords",
+              label = h4(uiOutput("title_stopwords")),
+              multiple = FALSE,
+              accept = c(".csv")
+            )
+          ),
+          
+          actionButton("limpieza", uiOutput("title_btn_clean"), class = "button"),
+          tags$style(
+            type = 'text/css',
+            "#limpieza { width:100%; background-color: #73A931;border: none; }"
+          ),
+          
+          
+        ),
+        mainPanel(tablaLimpiezaDatos)
+      ),
+      HTML(
+        '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+      )
     ),
-    tabPanel(title = uiOutput("title_panel_prediction"),
-             panel(
-               titlePanel(
-                 div(class="title_panel_predict_",uiOutput("title_panel_predict_"))),
-               sidebarPanel(
-                 div(class="title_panel_model",h2(uiOutput("title_panel_model"))),
-                # h3(uiOutput("title_panel_model")),
-                 
-               #  h4(fileInput("csvs_prueba",label = h4("Cargar archivos"), multiple = TRUE,
-              #                accept = c(
-              #                ".csv"))),
-
-                      withBusyIndicatorUI(
-                        actionButton('btn_modelo_IA', uiOutput("btn_title_model"),class = "button")
-                      )
-               ),
-               mainPanel(
-                 modelo_IA
-               )
-             ),
-             HTML('<center><img src="images/sastuit.jpg"  alt="sastuit"></center>')
-
+    tabPanel(
+      title = uiOutput("title_panel_prediction"),
+      panel(
+        titlePanel(div(
+          class = "title_panel_predict_", uiOutput("title_panel_predict_")
+        )),
+        sidebarPanel(
+          div(class = "title_panel_model", h2(uiOutput(
+            "title_panel_model"
+          ))),
+          # Horizontal line ----
+          # tags$hr(),
+          # h3(uiOutput("title_panel_model")),
+          
+          #  h4(fileInput("csvs_prueba",label = h4("Cargar archivos"), multiple = TRUE,
+          #                accept = c(
+          #                ".csv"))),
+          
+          withBusyIndicatorUI(actionButton(
+            'btn_modelo_IA', uiOutput("btn_title_model"), class = "button"
+          )),
+          tags$style(
+            type = 'text/css',
+            "#btn_modelo_IA { width:100%; background-color: #73A931;border: none; }"
+          ),
+          tags$hr()
+          
+        ),
+        mainPanel(modelo_IA)
+      ),
+      HTML(
+        '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+      )
+      
     ),
-    navbarMenu(title=uiOutput("title_panel_language"),
-               tabPanel("EN",             
-                        HTML('<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>')
-               ),
-               tabPanel("ES",
-                        HTML('<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>')
-               )
+    navbarMenu(
+      title = uiOutput("title_panel_language", inline = TRUE),
+      tabPanel(
+        "EN",
+        tags$hr(),
+        tags$br(),
+        panel(fluidRow(
+          align = "center",
+          p(uiOutput("textSASTuit2")),
+          HTML(
+            '<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>'
+          ),
+          
+        )),
+        tags$br(),
+        tags$hr(),
+        
+      ),
+      tabPanel(
+        "ES",
+        tags$hr(),
+        tags$br(),
+        panel(fluidRow(
+          align = "center",
+          p(uiOutput("textSASTuit3")),
+          HTML(
+            '<center><img src="images/sastuit_emoji.jpg"  alt="sastuit"></center>'
+          ),
+          
+        )),
+        tags$br(),
+        tags$hr(),
+      )
     )
   )
 )
 
-server <- function(input, output,session) {
-  
+server <- function(input, output, session) {
   # call file functions
   source("www/files/funciones.R")
   
   # max size file upload csv: 1gb
-  (shiny.maxRequestSize=1000*1024^2)
-  options(shiny.maxRequestSize = 1000*1024^2)
- 
+  (shiny.maxRequestSize = 1000 * 1024 ^ 2)
+  options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
+  
   # default variables
   var_lang_sent <<- FALSE
   var_lang_CombinaFiles <<- FALSE
   var_bandera_clean_text <<- FALSE
   
-  condicion_token<<-FALSE
+  condicion_token <<- FALSE
   
   #-----------------------------------------------------------------------------
   # change language
   
   # select language EN default
-  updateTabsetPanel(session, "navbar",selected = "EN")
+  #updateTabsetPanel(session, "navbar",selected = "EN")
   source("www/files/en.R")
   
   observeEvent(input$navbar, {
-    
-    if (input$navbar == "EN"){
+    if (input$navbar == "EN") {
       # call files in EN
       source("www/files/en.R")
-    }else if(input$navbar == "ES"){
+      
+    } else if (input$navbar == "ES") {
       # call files in ES
       source("www/files/es.R")
+      
     }
-
+    
     # ---------------------------------------------------------------
     # name menu Home
     
@@ -322,21 +562,59 @@ server <- function(input, output,session) {
     
     # title SASTuit
     output$titulo_panel_main = renderText({
-      HTML(paste0("<b>",titulo_panel_main_,"</b>"))
+      HTML(paste0("<b>", titulo_panel_main_, "</b>"))
+      #titulo_panel_main_
+    })
+    # label_name_app
+    output$label_name_app = renderText({
+      label_name_app_
+    })
+    # label_consumerKey
+    output$label_consumerKey = renderText({
+      label_consumerKey
+    })
+    # label_consumerSecret
+    output$label_consumerSecret = renderText({
+      label_consumerSecret
+    })
+    # label_accessToken
+    output$label_accessToken = renderText({
+      label_accessToken
+    })
+    # label_accessSecret
+    output$label_accessSecret = renderText({
+      label_accessSecret
     })
     # labelHashTag
     output$labelHashTag = renderText({
       labelHashTag_
     })
+    output$textSASTuit = renderText({
+      #HTML(paste0("<b>",prueba,"</b>"))
+      textSASTuit_
+    })
+    output$textSASTuit2 = renderText({
+      #HTML(paste0("<b>",prueba,"</b>"))
+      textSASTuit_
+    })
+    output$textSASTuit3 = renderText({
+      #HTML(paste0("<b>",prueba,"</b>"))
+      textSASTuit_
+    })
+    
     # labelnumLimite
     output$labelnumLimite = renderText({
       labelnumLimite_
     })
     # labelselectIdioma
     output$labelselectIdioma = renderText({
-      title_panel_language_
+      title_general_language_
     })
-    # labelsent
+    
+    # labelmax_id
+    output$labelmax_id = renderText({
+      labelmax_id
+    })
     output$labelsent = renderText({
       labelsent_
     })
@@ -346,10 +624,9 @@ server <- function(input, output,session) {
     })
     # title number row
     output$nowRegistrosTuits <- renderText({
-      
-      if(exists('num_nrowDf_search')){
+      if (exists('num_nrowDf_search')) {
         paste(nowrows_, num_nrowDf_search)
-      }else{
+      } else{
         paste(nowrows_, "0")
       }
     })
@@ -363,7 +640,8 @@ server <- function(input, output,session) {
     # name menu Bind files
     # title SASTuit
     output$title_panel_main_file = renderText({
-      HTML(paste0("<b>",titulo_panel_main_,"</b>"))
+      HTML(paste0("<b>", titulo_panel_main_, "</b>"))
+      #titulo_panel_main_
     })
     # title_panel_bind_files
     output$title_panel_bind_files = renderText({
@@ -375,7 +653,7 @@ server <- function(input, output,session) {
     })
     # labelselectIdiomaCombina
     output$labelselectIdiomaCombina = renderText({
-      title_panel_language_
+      title_general_language_
     })
     # btn_label_rbind
     output$btn_label_rbind = renderText({
@@ -391,9 +669,9 @@ server <- function(input, output,session) {
     })
     # title number row
     output$nowRegistros <- renderText({
-      if(exists('nrow_Panelcombina')){
+      if (exists('nrow_Panelcombina')) {
         paste(nowrows_, nrow_Panelcombina)
-      }else{
+      } else{
         paste(nowrows_, "0")
       }
     })
@@ -403,7 +681,8 @@ server <- function(input, output,session) {
     # name menu Text data cleaning
     # # title SASTuit
     output$titulo_panel_main_clean = renderText({
-      HTML(paste0("<b>",titulo_panel_main_,"</b>"))
+      HTML(paste0("<b>", titulo_panel_main_, "</b>"))
+      #titulo_panel_main_
       
     })
     # title_panel_cleaningData
@@ -412,7 +691,8 @@ server <- function(input, output,session) {
     })
     # title_filters
     output$title_filters = renderText({
-      HTML(paste0("<b>",title_filters_,"</b>"))
+      HTML(paste0("<b>", title_filters_, "</b>"))
+      #title_filters_
     })
     # title_img_profile
     output$title_img_profile = renderText({
@@ -444,23 +724,27 @@ server <- function(input, output,session) {
       title_btn_clean_
     })
     # title_language_clean
-    output$title_language_clean = renderText({
-      title_panel_language_
-    })
+    #output$title_language_clean = renderText({
+    # title_panel_language_
+    #})
     # title_tlimpieza
     output$title_tlimpieza = renderText({
       title_tlimpieza_
     })
-    # title number row 
+    # title number row
     output$nowRegistros2 <- renderText({
-      if(exists('df_search_Clean')){
+      if (exists('df_search_Clean')) {
         paste(nowrows_,  nrow(df_search_Clean))
-      }else{
+      } else{
         paste(nowrows_, "0")
       }
     })
     # btn_download_clean
     output$btn_download_clean = renderText({
+      btn_download_
+    })
+    # btn_download_Classification
+    output$btn_download_Classification = renderText({
       btn_download_
     })
     # ---------------------------------------------------------------
@@ -509,27 +793,63 @@ server <- function(input, output,session) {
   })
   #-----------------------------------------------------------------------------
   
-  #-----------------------------------------------------------------------------  
+  #-----------------------------------------------------------------------------
   # default buttons disabled
   toggleState("downloadData")
   toggleState("downloadDataCombinaDatos")
   toggleState("downloadDataLimpiezaDatos")
+  toggleState("downloadDataClassification")
+  
   #-----------------------------------------------------------------------------
   
   #-----------------------------------------------------------------------------
   # base files show
-  df_search <- read.table("www/files/files_csv/df_search_base.csv",header = TRUE, sep = ",",check.names = TRUE, encoding = "Windows-1252")
+  df_search <-
+    read.table(
+      "www/files/files_csv/df_search_base.csv",
+      header = TRUE,
+      sep = ",",
+      check.names = TRUE,
+      encoding = "Windows-1252"
+    )
   
-  result_tweets <- read.table("www/files/files_csv/result_tweets_base.csv",header = TRUE, sep = ",",check.names = F)
-
-  df_hashtag <- read.table("www/files/files_csv/hashtagVacio.csv",header = TRUE, sep = ",",encoding = "Windows-1252")
+  result_tweets <-
+    read.table(
+      "www/files/files_csv/result_tweets_base.csv",
+      header = TRUE,
+      sep = ",",
+      check.names = F
+    )
+  
+  df_hashtag <-
+    read.table(
+      "www/files/files_csv/hashtagVacio.csv",
+      header = TRUE,
+      sep = ",",
+      encoding = "Windows-1252"
+    )
   
   row.names(df_hashtag) <- ""
   
-  df_hashtag2 <- read.csv("www/files/files_csv/hashtag.csv",header = TRUE, sep = ",",encoding = "Windows-1252")
 
-  location_base <-  read.csv("www/files/files_csv/location_base.csv",header = TRUE, sep = ",",encoding = "Windows-1252")
-
+  
+  location_base <-
+    read.csv(
+      "www/files/files_csv/location_base.csv",
+      header = TRUE,
+      sep = ",",
+      encoding = "Windows-1252"
+    )
+  
+  stopwords_spanish <-
+    read.table(
+      "www/files/files_csv/stopwords_spanish.csv",
+      header = F,
+      sep = ",",
+      check.names = TRUE,
+      encoding = "Windows-1252"
+    )
+  
   #tSparse_Modelo <- read.csv("www/files/files_csv/es/tSparse_Modelo.csv",header = TRUE, sep = ",",encoding = "Windows-1252")
   
   # print base files
@@ -547,107 +867,131 @@ server <- function(input, output,session) {
     result_tweets
   })
   #output$t_hashtag = DT::renderDataTable({
-   # datatable(df_hashtag, options = list(dom = ''))
-    
+  # datatable(df_hashtag, options = list(dom = ''))
+  
   #})
   #-----------------------------------------------------------------------------
   
- 
+  
   observeEvent(input$btn_modelo_IA, {
     # When the button is clicked, wrap the code in a call to `withBusyIndicatorServer()`
     
-      if(var_bandera_clean_text){
+    if (var_bandera_clean_text) {
+      #verify lang in spanish to classify
+      if (tweetsIdioma != "es") {
+        sendSweetAlert(
+          session = session,
+          title = "¡Error!",
+          text = message_model2,
+          type = "error"
+        )
         
+      } else{
         withBusyIndicatorServer("btn_modelo_IA", {
           # preprocessing column text
           source("www/files/model.R")
+          
+          enable("downloadDataClassification")
+          
+          # descargar dataframe en formato csv
+          output$downloadDataClassification <- downloadHandler(
+            filename = function() {
+              paste("classification-", Sys.Date(), ".csv", sep = "")
+            },
+            content = function(file) {
+              save_as_csv(
+                df_search_Clean,
+                file,
+                prepend_ids = TRUE,
+                na = "",
+                fileEncoding = "Windows-1252"
+              )
+            }
+          )
           
           # print dataframe
           output$t_modelo_IA <- renderTable({
             table_results
           })
-          if(!is.na(number_column_location)){
-            
-            if(tweetsUbicacionVacia){
-              output$t_location = DT::renderDataTable({
-                datatable(tabla_location, options = list(searching = FALSE,paging = FALSE ))
-                #DT::datatable(iris, options = list(searching = FALSE))
-                #tabla_location
-              })
-            }else{
-              output$t_location = DT::renderDataTable({
-                datatable(NULL, options = list(dom = ''))
-                
-              })
-            }
-          }
-          if(contains_hashtags){
-            output$t_hashtag = DT::renderDataTable({
-              datatable(tabla_hashtag, options = list(searching = FALSE,paging = FALSE ))
+          
+          if (var_apply_top_location) {
+            output$t_location = DT::renderDataTable({
+              datatable(tabla_location,
+                        options = list(searching = FALSE, paging = FALSE))
+              #DT::datatable(iris, options = list(searching = FALSE))
+              #tabla_location
+            })
+          } else{
+            output$t_location = DT::renderDataTable({
+              datatable(NULL, options = list(dom = ''))
               
             })
-          }else{
+          }
+          if (contains_hashtags) {
+            output$t_hashtag = DT::renderDataTable({
+              datatable(tabla_hashtag,
+                        options = list(searching = FALSE, paging = FALSE))
+              
+            })
+          } else{
             output$t_hashtag = DT::renderDataTable({
               datatable(NULL, options = list(dom = ''))
             })
           }
         })
-      }else{
-        sendSweetAlert(
-          session = session,
-          title = "¡Error!",
-          text = message_model,
-          type = "error"
-        ) 
       }
-      
-
-      
- 
+    } else{
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = message_model,
+        type = "error"
+      )
+    }
     
   })
   
   
   # boton combinaFiles
-  observeEvent(input$combinaFiles,{
+  observeEvent(input$combinaFiles, {
     withBusyIndicatorServer("combinaFiles", {
-    req(input$csvs)
+      req(input$csvs)
     })
     
     language <- input$selectIdiomaCombina
     
-    if(language == "-"){
+    if (language == "-") {
       sendSweetAlert(
         session = session,
         title = "¡Error!",
         text = message_language,
         type = "error"
-      ) 
+      )
       
-    }else{
-      
+    } else{
       withBusyIndicatorServer("combinaFiles", {
-      
-
-      tweetsIdioma_CombinaFiles <<- language
-      var_lang_CombinaFiles <<- TRUE
-      
-
-      df_search_API <<- rbindlist(lapply(input$csvs$datapath, fread),
-                                use.names = TRUE, fill = TRUE)
-      
+        tweetsIdioma_CombinaFiles <<- language
+        var_lang_CombinaFiles <<- TRUE
+        var_lang_sent <<- FALSE
+        
+        df_search_API <<-
+          rbindlist(lapply(input$csvs$datapath, fread),
+                    use.names = TRUE,
+                    fill = TRUE)
+        
       })
       
       nrow_Panelcombina <<- dim(df_search_API)[1]
       
       # obtained number column lang
-      number_column_lang_pre <- match("lang",names(df_search_API))
+      number_column_lang_pre <- match("lang", names(df_search_API))
       
-      if(!is.na(number_column_lang_pre)){
-       # df_search_API <- data.frame(lapply(df_search_API, as.character), stringsAsFactors=FALSE)
+      if (!is.na(number_column_lang_pre)) {
+        # df_search_API <- data.frame(lapply(df_search_API, as.character), stringsAsFactors=FALSE)
         
         #Seleccionar tweets en el idioma seleccionado.
-        df_search_API <<- df_search_API %>% filter(lang == tweetsIdioma_CombinaFiles)
+        df_search_API <<-
+          df_search_API %>% filter(lang == tweetsIdioma_CombinaFiles)
       }
       
       # imprimir dataframe
@@ -661,206 +1005,244 @@ server <- function(input, output,session) {
       # descargar dataframe en formato csv
       output$downloadDataCombinaDatos <- downloadHandler(
         filename = function() {
-          paste("data",".csv", sep="")
+          paste("data", ".csv", sep = "")
         },
         content = function(file) {
-          save_as_csv(df_search_API, file, prepend_ids = FALSE, na = "",
-                      fileEncoding = "Windows-1252")
+          save_as_csv(
+            df_search_API,
+            file,
+            prepend_ids = FALSE,
+            na = "",
+            fileEncoding = "Windows-1252"
+          )
         }
       )
       
       output$nowRegistros <- renderText({
-        
         paste(nowrows_, nrow_Panelcombina)
         
       })
     }
     
-   
-  })
-  
-  observeEvent(input$selectIdioma, {
-    
-    language <- input$selectIdioma
-
-    enable("selectIdiomaLimpieza")
-    
-    if(language != FALSE){
-
-      disable("selectIdiomaLimpieza")
-    }
     
   })
   
-  observeEvent(input$selectIdiomaCombina, {
-    
-    language <- input$selectIdiomaCombina
-
-    if(language != FALSE){
-
-      disable("selectIdiomaLimpieza")
-    }
-    
-  })
+  #observeEvent(input$selectIdioma, {
+  
+  # language <- input$selectIdioma
+  
+  #enable("selectIdiomaLimpieza")
+  
+  #if(language != FALSE){
+  
+  # disable("selectIdiomaLimpieza")
+  #}
+  
+  #})
+  
+  #observeEvent(input$selectIdiomaCombina, {
+  
+  # language <- input$selectIdiomaCombina
+  
+  #if(language != FALSE){
+  
+  # disable("selectIdiomaLimpieza")
+  #}
+  
+  #})
   
   observeEvent(input$ratelimit, {
-    
     ratelimit = input$ratelimit
-    if(ratelimit){
+    if (ratelimit) {
       toggleState("numLimite")
       ratelimit <<- TRUE
-    }else{
+    } else{
       enable("numLimite")
       ratelimit <<- FALSE
     }
   })
   
-  observeEvent(input$limpieza,{
-    
+  observeEvent(input$limpieza, {
     # verifica que df_search_API exista
     bandera <- exists('df_search_API')
     
-    if(bandera){
-      
-     if(dim(df_search_API)[1] >= 1){
-       tweetsImgPerfil <<- input$twImgPerfil
-       
-       tweetsImgPortada <<- input$twImgPortada
-       
-       tweetsUbicacionVacia <<- input$twUbicacionVacia
-       
-       tweetshashtags_f <<- input$twhashtags_f
-       
-       tweetsLongitud <<- input$longtext
-       
-       language <- input$selectIdiomaLimpieza
-       
-       boolean_idioma <- FALSE
-       
-       if(var_lang_sent == TRUE && tweetsIdioma_sent == FALSE){
-         
-         if(language == "-"){
-           sendSweetAlert(
-             session = session,
-             title = "¡Error!",
-             text = message_language,
-             type = "error"
-           )
-           boolean_idioma <- FALSE
-         }else{
-           tweetsIdioma <<- language
-           boolean_idioma <- TRUE
-         }
-       }
-       else if(var_lang_sent == TRUE && tweetsIdioma_sent != FALSE){
-         
-         tweetsIdioma <<- tweetsIdioma_sent
-         boolean_idioma <- TRUE
-         
-       }
-       if(var_lang_CombinaFiles == TRUE){
-         tweetsIdioma <<- tweetsIdioma_CombinaFiles
-         boolean_idioma <- TRUE
-       }
-       
-       if(boolean_idioma){
-         
-         #extras_stopwords <<- ""
-         
-         # validar si existe un archivo para stopwords
-         if(!is.null(input$csvs_stopwords))
-         {
-           variable_stopwords <<- TRUE
-           
-           inFile_stopwords <- input$csvs_stopwords
-           
-           upload_file_stopwords <- read.csv(inFile_stopwords$datapath,sep = ",", header = F)
-           
-           extras_stopwords <- as.character(upload_file_stopwords$V1)
-           
-           extras_stopwords <<- c(extras_stopwords, stopwords(tweetsIdioma))
-           
-         }else{
-           extras_stopwords<<- stopwords(tweetsIdioma)
-         }
-         
-        # call file limpiezaDatos
-         source("www/files/limpiezaDatos.R")
-         
-         if(mensaje_columText){
-           sendSweetAlert(
-             session = session,
-             title = "¡Error!",
-             text = alert_Textdataset,
-             type = "error"
-           )  
-         }else{
-           output$tablaLimpiezaDatos = DT::renderDataTable({
-             df_search_Clean
-           })
-           output$nowRegistros2 <- renderText({
-             
-             paste(nowrows_,  nrow(df_search_Clean))
-             
-           })
-           # habilita boton descarga
-           enable("downloadDataLimpiezaDatos")
-           
-           # descargar dataframe en formato csv
-           output$downloadDataLimpiezaDatos <- downloadHandler(
-             filename = function() {
-               paste("data",".csv", sep="")
-             },
-             content = function(file) {
-               save_as_csv(df_search_Clean, file, prepend_ids = TRUE, na = "",
-                           fileEncoding = "Windows-1252")
-             }
-           )
-         }
-       }
-     }else{
-       sendSweetAlert(
-         session = session,
-         title = "¡Error!",
-         text = alert_low_data,
-         type = "error"
-       )  
+    if (bandera) {
+      if (dim(df_search_API)[1] >= 1) {
+        tweetsImgPerfil <<- input$twImgPerfil
+        
+        tweetsImgPortada <<- input$twImgPortada
+        
+        tweetsUbicacionVacia <<- input$twUbicacionVacia
+        
+        tweetshashtags_f <<- input$twhashtags_f
+        
+        tweetsLongitud <<- input$longtext
+        
+        #language <- input$selectIdiomaLimpieza
+        
+        boolean_idioma <- FALSE
+        
+        if (var_lang_CombinaFiles == TRUE && var_lang_sent == TRUE) {
+          tweetsIdioma <<- tweetsIdioma_CombinaFiles
+          boolean_idioma <- TRUE
+        } else if (var_lang_CombinaFiles == TRUE &&
+                   var_lang_sent == FALSE) {
+          tweetsIdioma <<- tweetsIdioma_CombinaFiles
+          boolean_idioma <- TRUE
+        } else if (var_lang_sent == TRUE  &&
+                   var_lang_CombinaFiles == FALSE) {
+          tweetsIdioma <<- language
+          boolean_idioma <- TRUE
+        } else{
+          boolean_idioma <- FALSE
+        }
+        
+        if (boolean_idioma) {
+          #extras_stopwords <<- ""
+          
+          # validar si existe un archivo para stopwords
+          if (!is.null(input$csvs_stopwords))
+          {
+            variable_stopwords <<- TRUE
+            
+            inFile_stopwords <- input$csvs_stopwords
+            
+            upload_file_stopwords <-
+              read.csv(inFile_stopwords$datapath,
+                       sep = ",",
+                       header = F)
+            
+            extras_stopwords <-
+              as.character(upload_file_stopwords$V1)
+            
+            extras_stopwords <<-
+              c(extras_stopwords, stopwords(tweetsIdioma))
+            
+          } else{
+            if (tweetsIdioma == "es") {
+              extras_stopwords <- as.character(stopwords_spanish$V1)
+              #extras_stopwords <<- c(extras_stopwords, stopwords('es'))
+              extras_stopwords <<- c(extras_stopwords)
+            } else if (tweetsIdioma == "en") {
+              #extras_stopwords<<- stopwords(tweetsIdioma)
+              extras_stopwords <<- stopwords('en')
+            }
+            
+          }
+          
+          # call file limpiezaDatos
+          source("www/files/limpiezaDatos.R")
+          
+          if (mensaje_columText) {
+            sendSweetAlert(
+              session = session,
+              title = "¡Error!",
+              text = alert_Textdataset,
+              type = "error"
+            )
+          } else{
+            output$tablaLimpiezaDatos = DT::renderDataTable({
+              df_search_Clean
+            })
+            output$nowRegistros2 <- renderText({
+              paste(nowrows_,  nrow(df_search_Clean))
+              
+            })
+            # habilita boton descarga
+            enable("downloadDataLimpiezaDatos")
+            
+            # descargar dataframe en formato csv
+            output$downloadDataLimpiezaDatos <- downloadHandler(
+              filename = function() {
+                paste("data", ".csv", sep = "")
+              },
+              content = function(file) {
+                save_as_csv(
+                  df_search_Clean,
+                  file,
+                  prepend_ids = TRUE,
+                  na = "",
+                  fileEncoding = "Windows-1252"
+                )
+              }
+            )
+          }
+        }
+      } else{
+        sendSweetAlert(
+          session = session,
+          title = "¡Error!",
+          text = alert_low_data,
+          type = "error"
+        )
       }
       
-    }else{
+    } else{
       sendSweetAlert(
         session = session,
         title = "¡Error!",
         text = alert_no_existdt ,
         type = "error"
-      )  
-    }      
+      )
+    }
     
     
   })
   
-  dataModal <- function() {
+  dataModal <- function(failed = FALSE) {
     modalDialog(
       title = title_APITwitter_,
-      textInput("name_app",  label = "", placeholder = label_name_app),
-      h4(textInput("api_key",  label = "", placeholder = label_consumerKey)),
-      h4(textInput("api_secret", label = "", value = "", placeholder = label_consumerSecret)),
-      h4(textInput("acc_token", label = "", value = "", placeholder = label_accessToken)),
-      h4(textInput("acc_secret", label = "", value = "", placeholder = label_accessSecret)),
+      #HTML('<img src="http://www.google.nl/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">'),
       
-      footer = tagList(
-        modalButton(label_cancel),
-        actionButton("envio", "OK")
+      textInput(
+        "name_app",
+        label = h4(uiOutput("label_name_app")),
+        width = '100%'
+      ),
+      h4(textInput(
+        "api_key",  label = h4(uiOutput("label_consumerKey")), width = '100%'
+      )),
+      h4(textInput(
+        "api_secret",
+        label = h4(uiOutput("label_consumerSecret")),
+        width = '100%'
+      )),
+      h4(textInput(
+        "acc_token",
+        label =  h4(uiOutput("label_accessToken")),
+        width = '100%'
+      )),
+      h4(textInput(
+        "acc_secret",
+        label = h4(uiOutput("label_accessSecret")),
+        width = '100%'
+      )),
+      
+      footer = tagList(fluidRow(
+        #modalButton(label_cancel),
+        actionButton("cancel", label_cancel,
+                     style = "width:20%;background-color: #FF2700;border: none; "),
+        actionButton("envio", "OK",
+                     style = "width:20%; background-color: #73A931;border: none; ")
+      )),
+      # child: images
+      tags$div(
+        class = "landing-block background-content",
+        HTML(
+          '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+        )
+        
       )
     )
   }
   
   observeEvent(input$apiKeys, {
-    
     showModal(dataModal())
   })
   
-
+  observeEvent(input$cancel, {
+    removeModal()
+  })
   observeEvent(input$envio, {
     name_app_ <<- trim(input$name_app)
     api_key <<- trim(input$api_key)
@@ -868,49 +1250,49 @@ server <- function(input, output,session) {
     acc_token <<- trim(input$acc_token)
     acc_secret <<- trim(input$acc_secret)
     
-
-
-    if(!isTruthy(name_app_)){
-      
+    
+    
+    if (!isTruthy(name_app_)) {
       sendSweetAlert(
         session = session,
         title = "¡Error!",
-        text = label_name_app,
+        text = alert_name_app,
         type = "error"
       )
-
       
-    }else if(!isTruthy(trim(input$api_key))){
+      
+    } else if (!isTruthy(trim(input$api_key))) {
       sendSweetAlert(
         session = session,
         title = "¡Error!",
-        text = label_consumerKey,
+        text = alert_consumerKey,
         type = "error"
-      )}else if(!isTruthy(trim(input$api_secret))){
-        sendSweetAlert(
-          session = session,
-          title = "¡Error!",
-          text = label_consumerSecret,
-          type = "error"
-        ) 
-        
-      }else if(!isTruthy(trim(input$acc_token))){
-        sendSweetAlert(
-          session = session,
-          title = "¡Error!",
-          text = label_accessToken,
-          type = "error"
-        ) 
-        
-      }else if(!isTruthy(trim(input$acc_secret))){
-        sendSweetAlert(
-          session = session,
-          title = "¡Error!",
-          text = label_accessSecret,
-          type = "error"
-        ) 
-        
-      }
+      )
+    } else if (!isTruthy(trim(input$api_secret))) {
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = alert_consumerSecret,
+        type = "error"
+      )
+      
+    } else if (!isTruthy(trim(input$acc_token))) {
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = alert_accessToken,
+        type = "error"
+      )
+      
+    } else if (!isTruthy(trim(input$acc_secret))) {
+      sendSweetAlert(
+        session = session,
+        title = "¡Error!",
+        text = alert_accessSecret,
+        type = "error"
+      )
+      
+    }
     
     else{
       condicion_token <<- TRUE
@@ -918,212 +1300,217 @@ server <- function(input, output,session) {
       removeModal()
     }
   })
-  observeEvent(input$sent,{
+  observeEvent(input$sent, {
     # credeciales API Twitter
     #source("www/files/createTokenApiTwitter.R")
-    if(condicion_token){     
-    
-    token <- create_token(
-      app = name_app_,
-      consumer_key = api_key,
-      consumer_secret = api_secret,
-      access_token = acc_token,
-     access_secret = acc_secret,set_renv = FALSE
-    )
-      
-    #Sys.sleep(10)
-      
-    var_rate_limit <- rate_limit(token, "search_tweets")[1,2]
-      
-    #Sys.sleep(10)
-      
-    if(is.null(var_rate_limit)){
-          sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = label_error_token,
-        type = "error"
-      ) 
-    }else if(var_rate_limit == 0){
-      condicion_token <<- FALSE
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = label_error_ratelimit,
-        type = "error"
-      ) 
-    }else if(var_rate_limit != 0){
-      
-          observeEvent(input$name_app, {  
-      
-      updateTextInput(session, "name_app", value =name_app_)
-      
-    })
-      
-    observeEvent(input$api_key, { 
-      
-      updateTextInput(session, "api_key", value =api_key)
-      
-    })
-    
-    observeEvent(input$api_key, { 
-      
-      updateTextInput(session, "api_secret", value =api_secret)
-      
-    })
-    
-    observeEvent(input$acc_token, { 
-      
-      updateTextInput(session, "acc_token", value =acc_token)
-      
-    })
-    
-    
-    observeEvent(input$acc_secret, { 
-      
-      updateTextInput(session, "acc_secret", value =acc_secret)
-      
-    })
-    
-    condicion = TRUE
-    
-    # Se obtienen valores de los inputs
-    
-    txtHashTag = trim(input$txtHashTag)
-    
-    include_rts = input$retweet
-    
-    numLimite = trim(input$numLimite)
-    
-    language <- input$selectIdioma
-    
-    max_id = trim(input$max_id)
-    
-    
-    if(!isTruthy(txtHashTag)){
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = alert_HashTag,
-        type = "error"
+    if (condicion_token) {
+      token <- create_token(
+        app = name_app_,
+        consumer_key = api_key,
+        consumer_secret = api_secret,
+        access_token = acc_token,
+        access_secret = acc_secret,
+        set_renv = FALSE
       )
-      condicion = FALSE
-    }
-    else if(language == "-"){
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = message_language,
-        type = "error"
-      ) 
-      condicion = FALSE
-    }
-    
-    if(numLimite <= 0 || !isTruthy(numLimite)){
-      condicion = FALSE
-      sendSweetAlert(
-        session = session,
-        title = "¡Error!",
-        text = alert_numTweet,
-        type = "error"
-      ) 
-    }
-    
-    if(include_rts){
-      include_rts = TRUE
-    }
-    else{
-      include_rts = FALSE
-    }
-    if(!isTruthy(max_id)){
-      max_id = NULL
-    }
-    
-    if(condicion){
       
-
+      var_rate_limit <- rate_limit(token, "search_tweets")[1, 2]
       
-      withBusyIndicatorServer("sent", {
-        #df_rate_limit <<- rate_limit()
-      
-        if(language != FALSE){
-          # query - busqueda tweets
-          df_search <- search_tweets(
-            txtHashTag,max_id = max_id, n = numLimite, lang=language, retryonratelimit = ratelimit,include_rts = include_rts, token = token 
-            
-          )
-         
-        }else{
-          # query - busqueda tweets
-          df_search <- search_tweets(
-            txtHashTag,max_id = max_id, n = numLimite, retryonratelimit = ratelimit,include_rts = include_rts, token = token 
-          )
-        }
-      })
-      
-      tweetsIdioma_sent <<- language
-      var_lang_sent <<- TRUE
-      
-      if(dim(df_search)[1]==0){
-        #errorCondition(df_search)
+      if (is.null(var_rate_limit)) {
+        showModal(dataModal())
         sendSweetAlert(
           session = session,
           title = "¡Error!",
-          text = alert_limitT,
+          text = label_error_token_correct,
           type = "error"
-        ) 
+        )
+      } else if (var_rate_limit == 0) {
+        condicion_token <<- FALSE
+        sendSweetAlert(
+          session = session,
+          title = "¡Error!",
+          text = label_error_ratelimit,
+          type = "error"
+        )
+      } else if (var_rate_limit != 0) {
+        observeEvent(input$name_app, {
+          updateTextInput(session, "name_app", value = name_app_)
+          
+        })
+        
+        observeEvent(input$api_key, {
+          updateTextInput(session, "api_key", value = api_key)
+          
+        })
+        
+        observeEvent(input$api_key, {
+          updateTextInput(session, "api_secret", value = api_secret)
+          
+        })
+        
+        observeEvent(input$acc_token, {
+          updateTextInput(session, "acc_token", value = acc_token)
+          
+        })
+        
+        
+        observeEvent(input$acc_secret, {
+          updateTextInput(session, "acc_secret", value = acc_secret)
+          
+        })
+        
+        
+        condicion = TRUE
+        
+        # Se obtienen valores de los inputs
+        
+        txtHashTag = trim(input$txtHashTag)
+        
+        include_rts = input$retweet
+        
+        numLimite = trim(input$numLimite)
+        
+        language <<- input$selectIdioma
+        
+        max_id = trim(input$max_id)
+        
+        
+        if (!isTruthy(txtHashTag)) {
+          sendSweetAlert(
+            session = session,
+            title = "¡Error!",
+            text = alert_HashTag,
+            type = "error"
+          )
+          condicion = FALSE
+        }
+        else if (language == "-") {
+          sendSweetAlert(
+            session = session,
+            title = "¡Error!",
+            text = message_language,
+            type = "error"
+          )
+          condicion = FALSE
+        }
+        
+        if (numLimite <= 0 || !isTruthy(numLimite)) {
+          condicion = FALSE
+          sendSweetAlert(
+            session = session,
+            title = "¡Error!",
+            text = alert_numTweet,
+            type = "error"
+          )
+        }
+        
+        if (include_rts) {
+          include_rts = TRUE
+        }
+        else{
+          include_rts = FALSE
+        }
+        if (!isTruthy(max_id)) {
+          max_id = NULL
+        }
+        
+        if (condicion) {
+          withBusyIndicatorServer("sent", {
+            #df_rate_limit <<- rate_limit()
+            
+            if (language != FALSE) {
+              # query - busqueda tweets
+              df_search <- search_tweets(
+                txtHashTag,
+                max_id = max_id,
+                n = numLimite,
+                lang = language,
+                retryonratelimit = ratelimit,
+                include_rts = include_rts,
+                token = token
+                
+              )
+              
+            } else{
+              # query - busqueda tweets
+              df_search <- search_tweets(
+                txtHashTag,
+                max_id = max_id,
+                n = numLimite,
+                retryonratelimit = ratelimit,
+                include_rts = include_rts,
+                token = token
+              )
+            }
+          })
+          
+          tweetsIdioma_sent <<- language
+          var_lang_sent <<- TRUE
+          var_lang_CombinaFiles <<- FALSE
+          if (dim(df_search)[1] == 0) {
+            #errorCondition(df_search)
+            sendSweetAlert(
+              session = session,
+              title = "¡Error!",
+              text = alert_limitT,
+              type = "error"
+            )
+          }
+          
+          # dataframe generado
+          df_search <- data.table::data.table(df_search)
+          
+          num_nrowDf_search <<- dim(df_search)[1]
+          
+          # copia del dataframe generado
+          df_search_API <<- df_search
+          
+          #numerofilas_df_search <<- dim(df_search)[1]
+          
+          # imprimir dataframe
+          output$mytable = DT::renderDataTable({
+            df_search
+          })
+          
+          output$nowRegistrosTuits <- renderText({
+            if (exists('num_nrowDf_search')) {
+              paste(nowrows_, num_nrowDf_search)
+            } else{
+              paste(nowrows_, "0")
+            }
+          })
+          
+          # habilitar boton Descargar
+          enable("downloadData")
+          
+          # descargar dataframe en formato csv
+          output$downloadData <- downloadHandler(
+            filename = function() {
+              paste("data-", Sys.Date(), ".csv", sep = "")
+            },
+            content = function(file) {
+              save_as_csv(
+                df_search,
+                file,
+                prepend_ids = TRUE,
+                na = "",
+                fileEncoding = "Windows-1252"
+              )
+            }
+          )
+        }
       }
-      
-      # dataframe generado
-      df_search <- data.table::data.table(df_search)
-      
-      num_nrowDf_search <<- dim(df_search)[1]
-      
-      # copia del dataframe generado
-      df_search_API <<- df_search
-      
-      #numerofilas_df_search <<- dim(df_search)[1]
-      
-      # imprimir dataframe
-      output$mytable = DT::renderDataTable({
-        df_search
-      })
-      
-      output$nowRegistrosTuits <- renderText({
-        if(exists('num_nrowDf_search')){
-          paste(nowrows_, num_nrowDf_search)
-        }else{
-          paste(nowrows_, "0")
-        }
-      })
-      
-      # habilitar boton Descargar   
-      enable("downloadData")
-      
-      # descargar dataframe en formato csv
-      output$downloadData <- downloadHandler(
-        filename = function() {
-          paste("data-",Sys.Date(),".csv", sep="")
-        },
-        content = function(file) {
-          save_as_csv(df_search, file, prepend_ids = TRUE, na = "",
-                      fileEncoding = "Windows-1252")
-        }
-      )
-    }
-    }
-    }else{
+    } else{
+      showModal(dataModal())
       sendSweetAlert(
         session = session,
         title = "¡Error!",
         text = label_error_token,
         type = "error"
-      ) 
+      )
     }
     
   })
 }
 
-# Run the application 
+# Run the application
 shinyApp(ui = ui, server = server)
-
