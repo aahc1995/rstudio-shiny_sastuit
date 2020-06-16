@@ -13,12 +13,16 @@
 
 #install.packages("sweetalertR")
 
+#install.packages("shinyBS")
+
 library(shiny)
 library(rtweet)
 library("shinydashboard")
 library("data.table")
 library("shinythemes")
 library(DT)
+
+library(shinyBS)
 
 #Text mining packages
 library(tm)

@@ -79,8 +79,69 @@ clean_text_en <- function(corpus){
   
 }
 
+pre_clean_text_es <- function(corpus){
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[[:punct:]]', replacement = ' ')
+  
+  corpus <- tm_map(corpus, content_transformer(tolower))
+  
+}
 # function clean_text_es to text spanish
 clean_text_es <- function(corpus){
+  
+  # removing emails
+  corpus <- tm_map(corpus, replace_email)
+  
+  # removing punctuation
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[[:punct:]]', replacement = ' ')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[,]+', replacement = ' ')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[@]+', replacement = ' ')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[#]+', replacement = ' ')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[™]+', replacement = ' ')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[’]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[—]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[“]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[”]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[–]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[…]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[·]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[€]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[,]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[(]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[)]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[<]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[>]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[_]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[•]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[´]+', replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[°]+', replacement = "  ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[']+", replacement = "")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[£]+", replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[…]+", replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[”]+", replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[•]+", replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[‘]+", replacement = " ")
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = "[–]+", replacement = " ")
+  corpus <- tm_map(corpus, removePunctuation)
+  
+  # removing numbers
+  corpus <- tm_map(corpus, removeNumbers)
+  
+  # conversion to lowecase
+  corpus <- tm_map(corpus, content_transformer(tolower))
+  
+  # removing stopwords
+  corpus <- tm_map(corpus, removeWords, extras_stopwords)
+  
+  corpus <- tm_map(corpus, stemDocument, language="spanish")
+  
+  # removing strip whitespace
+  corpus <- tm_map(corpus, stripWhitespace)
+  
+  return(corpus)
+}
+
+# function clean_text_es_SinStemDocument to text spanish
+clean_text_es_SinStemDocument <- function(corpus){
   
   # removing emails
   corpus <- tm_map(corpus, replace_email)
@@ -160,6 +221,13 @@ clean_trash <- function(texto_){
   
 }
 
+#remove repeated vocals
+remove_repeated_characters <- function(texto_){
+  texto_ <- gsub('([aeiou]{1})\\1+', '\\1', texto_)
+  #vocals and consonants
+  #texto_ <- gsub('([[:alpha:]])\\1+', '\\1', texto_)
+}
+
 # function transformt format text
 
 trans_format_text <- function(t_text,from,to){
@@ -202,14 +270,25 @@ replace_country <- function(c_text){
       c_text[i] <- "colombia"
       i = i + 1
     } 
-    else if (str_detect(texto, "mexico") || str_detect(texto, "cdmx")) {
+    else if (str_detect(texto, "mexico") || str_detect(texto, "cdmx") || str_detect(texto, "merida yucatan")
+             || str_detect(texto, "mty mx")  || str_detect(texto, "monterrey nuevo leon") || str_detect(texto, "queretaro qro")
+             || str_detect(texto, "amecameca edo mex") || str_detect(texto, "san miguel de allende guanaju")
+             || str_detect(texto, "saltillo coahuila") || str_detect(texto, "saltillo coahuila") ){
       c_text[i] <- "mexico"
       i = i + 1
     }   
     else if (str_detect(texto, "chile")) {
       c_text[i] <- "chile"
       i = i + 1
-    }    
+    }  
+    else if (str_detect(texto, "alajuela costa rica")) {
+      c_text[i] <- "costa rica"
+      i = i + 1
+    } 
+    else if (str_detect(texto, "montevideo") || str_detect(texto, "montevideo uruguay")) {
+      c_text[i] <- "uruguay"
+      i = i + 1
+    } 
     else if (str_detect(texto, "venezuela") || texto == "caracas venezuela") {
       c_text[i] <- "venezuela"
       i = i + 1
@@ -364,7 +443,10 @@ replace_country <- function(c_text){
     else if( texto == "android" || texto == "info" || texto == "worldwide" || texto == "global" || texto == "everywhere" || texto == "tere picheufufufuf"
              || texto == "deutschland"|| texto == "earth"|| texto == "o sea"|| texto == "internet"
              || texto == "ai" || texto == "seg"|| texto == "betacaryophyllene" || texto == "iii everywhere"
-             || texto == "pregunten lo que quieran"){
+             || texto == "pregunten lo que quieran" || texto == "en los labios de mi nina" || texto == "aqui en mi pais"
+             || texto == "yo que se en cuarentena" || texto == "wherever he is" || texto == "detras de ti"
+             || texto == "en libertad" || texto == "en tu corazon bb" || texto == "she her" || texto == "infiernopasevip"
+             || texto == "la concha de tu puta madre"){
       c_text[i] <- "others"
       i = i + 1
     }
@@ -383,6 +465,13 @@ replace_country <- function(c_text){
 #stem_snowball(c("queremos", "patatas", "comimos", "amó","ganó","papá"), "es")
 
 clean_hashtags <- function(corpus){
+  # removing punctuation
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[[:punct:]]', replacement = '')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[!]+', replacement = '')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[.]+', replacement = '')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[?]+', replacement = '')
+  corpus <- tm_map(corpus, content_transformer(gsub), pattern = '[,]+', replacement = '')
+  corpus <- tm_map(corpus, removePunctuation)
   corpus <- tm_map(corpus, content_transformer(tolower))
   return(corpus)
 }

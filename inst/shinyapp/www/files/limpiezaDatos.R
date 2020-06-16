@@ -54,7 +54,7 @@ if(!is.na(number_column_text)){
       df_search_Clean <- df_search_Clean %>% filter(profile_banners != " ")
     }
   }
-  
+  var_apply_top_location <<- FALSE
   if(!is.na(number_column_location)){
     
     if(tweetsUbicacionVacia){
@@ -109,6 +109,8 @@ if(!is.na(number_column_text)){
       # apply function replace_country
       df_search_Clean$location <- replace_country(df_search_Clean$location)
       
+      var_apply_top_location <<- TRUE
+      
     }
     
   }
@@ -116,6 +118,7 @@ if(!is.na(number_column_text)){
     #Seleccionar tweets mayores a tweetsLongitud
     df_search_Clean <- df_search_Clean %>% filter(nchar(as.character(text))>tweetsLongitud)
   }
+  
   
 }else{
   mensaje_columText <<- TRUE

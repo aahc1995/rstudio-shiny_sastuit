@@ -16,9 +16,10 @@ if(exists('var_bandera_clean_text')){
     tSparse_Modelo <- read.csv("www/files/files_csv/modelo/es/tSparse_Modelo.csv",header = TRUE, sep = ",",encoding = "Windows-1252")
     
     #load model train
-    #load(file = "www/files/files_csv/modelo/es/model_randomForest.rda")
+    load(file = "www/files/files_csv/modelo/es/rf_modelo.rda")
     
   }
+
   # Create the Text Corpus
   corpus_descarga = Corpus(VectorSource(df_search_Clean$text))
   
@@ -26,7 +27,7 @@ if(exists('var_bandera_clean_text')){
   # 'select_text' found in preprocessingText file
   frequencies_descarga = DocumentTermMatrix(corpus_descarga)
   
-  sparse_descarga = removeSparseTerms(frequencies_descarga, 0.995)
+  sparse_descarga = removeSparseTerms(frequencies_descarga, 0.996)
   
   tSparse_descarga = as.data.frame(as.matrix(sparse_descarga))
   
@@ -90,32 +91,44 @@ if(exists('var_bandera_clean_text')){
   new_matrix <- data.frame(new_matrix)
   
   # Predicting on new_matrix set
-  predValid_ <- predict(model, new_matrix, type = "class")
+  predValid_ <- predict(rf_modelo, new_matrix, type = "class")
   
   #View(predValid_)
   
   new_matrix$sentiment <- predValid_
+  # add prediction
+  df_search_Clean$sentiment <- predValid_
+  #
+  
+  
+  resultados <- table(predValid_)
   
   # Checking classification accuracy
   #acc <- mean(predValid_ == new_matrix$sentiment)
   
-  resultados <- table(predValid_,new_matrix$sentiment)
+  #resultados <- table(predValid_,new_matrix$sentiment)
   
-  tw_neutral <- "0"
+  #tw_neutral <- "0"
   
-  tw_negatives <- sum(resultados[1,1],resultados[1,2])
+  #tw_negatives <- sum(resultados[1,1],resultados[1,2])
+  tw_negatives <- resultados[1]
+  tw_neutral <- resultados[2]
+  tw_positives <- resultados[3]
+  #tw_positives <- sum(resultados[2,1],resultados[2,2])
   
-  tw_positives <- sum(resultados[2,1],resultados[2,2])
+
+  #acc <- paste0(round(sum(diag(table(predValid_,new_matrix$sentiment)))/nrow(as.data.frame(predValid_))*100,2),"%")
   
-  acc <- paste0(round(sum(diag(table(predValid_,new_matrix$sentiment)))/nrow(as.data.frame(predValid_))*100,2),"%")
+  table_results <<-  data.frame(t(data.table(c(nrow(df_search_Clean),tw_positives,tw_neutral,tw_negatives))))
+  # change idioman of titles
+  setattr(table_results, 'names', c('Tweets',title_positive,title_neutral,title_negative))
   
-  table_results <<-  data.frame(t(data.table(c(nrow(df_search_Clean),acc,tw_positives,tw_neutral,tw_negatives))))
-  setattr(table_results, 'names', c('Tweets',label_acc,title_positive,title_neutral,title_negative))
+  
+  
   
   #location freq
-  if(!is.na(number_column_location)){
+  if(var_apply_top_location){
     
-    if(tweetsUbicacionVacia){
       #Obtener columna location
       select_location <- data.frame(df_search_Clean$location)
       colnames(select_location)[1]<-"location"
@@ -136,12 +149,14 @@ if(exists('var_bandera_clean_text')){
       tabla_location <<-  tabla_freq_location %>% select(1, 3)
 
     }
-  }
+
   # obtained number column hashtags
   number_column_hashtag <- match("hashtags",names(df_search_Clean))
   
+  contains_hashtags <<- FALSE
   if(!is.na(number_column_hashtag)){
     if(tweetshashtags_f){
+      
       contains_hashtags <<- TRUE
       hashtags <- data.frame(unlist(df_search_Clean$hashtags))
       names(hashtags) <- "hashtag"
@@ -165,8 +180,4 @@ if(exists('var_bandera_clean_text')){
 
   }
   
-}else{
-  cat("Aplique preprocesaminto")
 }
-
-
