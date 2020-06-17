@@ -57,6 +57,9 @@ margin-left: auto;
  .navbar-nav > li:nth-child(6) {
  float: right;
  }
+.navbar-nav > li:nth-child(7) {
+ float: right;
+ }
 
 .title_panel_model{
   font-weight: bolder;
