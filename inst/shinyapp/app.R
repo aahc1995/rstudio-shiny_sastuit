@@ -347,14 +347,10 @@ ui <- fluidPage(
               h2(uiOutput(
                 "title_filters", inline = TRUE
               )),
-              tags$hr()),
-          
-          # h4(selectInput("selectIdiomaLimpieza", label = h4(uiOutput("title_language_clean")),
-          #               choices = list("-"='-',"ES" = 'es', "EN" = 'en'),
-          #              selected = 1)),
-          # Horizontal line ----
-          
-          
+             
+          h2(uiOutput("titulo_select_tweets")),
+          tags$hr()),
+
           h4(
             prettyCheckbox(
               "twImgPerfil",
@@ -433,8 +429,7 @@ ui <- fluidPage(
           tags$style(
             type = 'text/css',
             "#limpieza { width:100%; background-color: #73A931;border: none; }"
-          ),
-          
+          )
           
         ),
         mainPanel(tablaLimpiezaDatos)
@@ -446,20 +441,12 @@ ui <- fluidPage(
     tabPanel(
       title = uiOutput("title_panel_prediction"),
       panel(
-        titlePanel(div(
-          class = "title_panel_predict_", uiOutput("title_panel_predict_")
-        )),
+        titlePanel(title = uiOutput("title_panel_predict_")),
+
         sidebarPanel(
           div(class = "title_panel_model", h2(uiOutput(
             "title_panel_model"
           ))),
-          # Horizontal line ----
-          # tags$hr(),
-          # h3(uiOutput("title_panel_model")),
-          
-          #  h4(fileInput("csvs_prueba",label = h4("Cargar archivos"), multiple = TRUE,
-          #                accept = c(
-          #                ".csv"))),
           
           withBusyIndicatorUI(actionButton(
             'btn_modelo_IA', uiOutput("btn_title_model"), class = "button"
@@ -478,6 +465,7 @@ ui <- fluidPage(
       )
       
     ),
+    
     navbarMenu(
       title = uiOutput("title_panel_language", inline = TRUE),
       tabPanel(
@@ -511,11 +499,41 @@ ui <- fluidPage(
         tags$br(),
         tags$hr(),
       )
+    ),
+    tabPanel(
+      title = uiOutput("title_panel_about"),
+      panel(
+        
+        titlePanel(title ="Detalles"),
+        tags$hr(),
+
+        sidebarPanel(
+          width = 12,
+          div(class = "title_panel_model", h2(uiOutput(
+            "sd"
+          ))),
+          
+          helpText("- R version 3.6.1"),
+          helpText("- Copyright (C) 2017 The R Foundation for Statistical Computing."),
+          helpText(uiOutput("description_developer")),
+          helpText(uiOutput("description_methodology_based")),
+          helpText( a("Click Here", href="https://url2.cl/MJaBh" ,target="_blank")),
+                      
+          
+        ),
+        mainPanel()
+      ),
+
+      HTML(
+        '<center><img src="images/sastuit.jpg"  alt="sastuit"></center>'
+      ),
     )
   )
 )
 
 server <- function(input, output, session) {
+
+  
   # call file functions
   source("www/files/funciones.R")
   
@@ -679,11 +697,25 @@ server <- function(input, output, session) {
     
     # ---------------------------------------------------------------
     # name menu Text data cleaning
-    # # title SASTuit
+    # title SASTuit
     output$titulo_panel_main_clean = renderText({
       HTML(paste0("<b>", titulo_panel_main_, "</b>"))
       #titulo_panel_main_
       
+    })
+    output$description_developer = renderText({
+      description_developer
+      
+    })
+    #description_methodology_based
+    output$description_methodology_based = renderText({
+      description_methodology_based
+      
+    })
+    
+    # titulo_select_tweets
+    output$titulo_select_tweets = renderText({
+    titulo_select_tweets
     })
     # title_panel_cleaningData
     output$title_panel_cleaningData = renderText({
@@ -723,10 +755,7 @@ server <- function(input, output, session) {
     output$title_btn_clean <- renderText({
       title_btn_clean_
     })
-    # title_language_clean
-    #output$title_language_clean = renderText({
-    # title_panel_language_
-    #})
+
     # title_tlimpieza
     output$title_tlimpieza = renderText({
       title_tlimpieza_
@@ -753,7 +782,7 @@ server <- function(input, output, session) {
     # name menu Prediction
     # title_panel_predict_
     output$title_panel_predict_ = renderText({
-      titulo_panel_main_
+      HTML(paste0("<b>", titulo_panel_main_, "</b>"))
     })
     # title_panel_prediction - menu
     output$title_panel_prediction = renderText({
@@ -789,7 +818,13 @@ server <- function(input, output, session) {
     output$title_panel_language = renderText({
       title_panel_language_
     })
-    # ---------------------------------------------------------------
+    
+    output$title_panel_about = renderText({
+      title_panel_about
+    })
+    
+    
+  # ---------------------------------------------------------------
   })
   #-----------------------------------------------------------------------------
   
@@ -866,10 +901,7 @@ server <- function(input, output, session) {
   output$t_modelo_IA <- renderTable({
     result_tweets
   })
-  #output$t_hashtag = DT::renderDataTable({
-  # datatable(df_hashtag, options = list(dom = ''))
-  
-  #})
+
   #-----------------------------------------------------------------------------
   
   
@@ -918,8 +950,7 @@ server <- function(input, output, session) {
             output$t_location = DT::renderDataTable({
               datatable(tabla_location,
                         options = list(searching = FALSE, paging = FALSE))
-              #DT::datatable(iris, options = list(searching = FALSE))
-              #tabla_location
+
             })
           } else{
             output$t_location = DT::renderDataTable({
@@ -987,8 +1018,7 @@ server <- function(input, output, session) {
       number_column_lang_pre <- match("lang", names(df_search_API))
       
       if (!is.na(number_column_lang_pre)) {
-        # df_search_API <- data.frame(lapply(df_search_API, as.character), stringsAsFactors=FALSE)
-        
+
         #Seleccionar tweets en el idioma seleccionado.
         df_search_API <<-
           df_search_API %>% filter(lang == tweetsIdioma_CombinaFiles)
@@ -1027,29 +1057,6 @@ server <- function(input, output, session) {
     
   })
   
-  #observeEvent(input$selectIdioma, {
-  
-  # language <- input$selectIdioma
-  
-  #enable("selectIdiomaLimpieza")
-  
-  #if(language != FALSE){
-  
-  # disable("selectIdiomaLimpieza")
-  #}
-  
-  #})
-  
-  #observeEvent(input$selectIdiomaCombina, {
-  
-  # language <- input$selectIdiomaCombina
-  
-  #if(language != FALSE){
-  
-  # disable("selectIdiomaLimpieza")
-  #}
-  
-  #})
   
   observeEvent(input$ratelimit, {
     ratelimit = input$ratelimit
@@ -1302,7 +1309,7 @@ server <- function(input, output, session) {
   })
   observeEvent(input$sent, {
     # credeciales API Twitter
-    #source("www/files/createTokenApiTwitter.R")
+ 
     if (condicion_token) {
       token <- create_token(
         app = name_app_,
@@ -1466,7 +1473,7 @@ server <- function(input, output, session) {
           
           #numerofilas_df_search <<- dim(df_search)[1]
           
-          # imprimir dataframe
+          # print dataframe
           output$mytable = DT::renderDataTable({
             df_search
           })
@@ -1479,10 +1486,10 @@ server <- function(input, output, session) {
             }
           })
           
-          # habilitar boton Descargar
+          # enable button Descargar
           enable("downloadData")
           
-          # descargar dataframe en formato csv
+          # download dataframe en formato csv
           output$downloadData <- downloadHandler(
             filename = function() {
               paste("data-", Sys.Date(), ".csv", sep = "")
