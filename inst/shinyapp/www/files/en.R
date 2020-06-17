@@ -58,12 +58,13 @@ btn_label_rbind_ <- "Bind files"
 
 title_panel_cleaningData_ <- "3) Text data cleaning"
 title_filters_ <- "Filters"
+titulo_select_tweets <- "Select tweets"
 title_profilebanners_ <- "With profile cover"
 title_img_profile_ <- "With profile photo"
 title_location_ <- "With location"
-title_hashtagF_ <- "Hashtag frequency"
+title_hashtagF_ <- "Apply Top Hashtags"
 title_longtext_ <- "Minimum of characters in the tweet:"
-title_stopwords_ <- "Upload file csv with Stopwords"
+title_stopwords_ <- "Upload file csv with list Stopwords"
 title_btn_clean_ <- "Apply Data cleaning"
 #alerts
 alert_Textdataset <- "The dataset does not have the column 'text'"
@@ -82,7 +83,9 @@ label_result_country <- "Country Rankings "
 btn_title_model <- "Apply"
 message_model <- "Apply data cleaning"
 # ---------------------------------------------------------------
-
+title_panel_about <- "About"
+description_developer <- "- Tool SASTuit developer by Anibal Armando Herrera Contreras."
+description_methodology_based <- "- Implemented methodology based on research Twitter Opinion Analysis About Topic 5G Technology."
 #
 title_positive <-"Positives"
 title_negative <- "Negatives"
