@@ -84,6 +84,7 @@ btn_title_model <- "Apply"
 message_model <- "Apply data cleaning"
 # ---------------------------------------------------------------
 title_panel_about <- "About"
+title_detailes <- "Details"
 description_developer <- "- Tool SASTuit developer by Anibal Armando Herrera Contreras."
 description_methodology_based <- "- Implemented methodology based on research Twitter Opinion Analysis About Topic 5G Technology."
 #
