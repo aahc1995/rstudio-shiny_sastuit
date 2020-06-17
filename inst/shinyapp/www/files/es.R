@@ -85,6 +85,7 @@ message_model <- "Aplique limpieza de datos"
 
 # ---------------------------------------------------------------
 title_panel_about <- "Acerca de"
+title_detailes <- "Detalles"
 description_developer <- "- Herramienta SASTuit desarrollada por Anibal Armando Herrera Contreras."
 description_methodology_based <- trans_format_text("Metodología implementada basada en la investigación Twitter Opinion Analysis About Topic 5G Technology.","UTF-8","ISO-8859-1")
 #
