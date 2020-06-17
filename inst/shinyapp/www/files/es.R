@@ -58,12 +58,13 @@ btn_label_rbind_ <- "Combina archivos"
 # ---------------------------------------------------------------
 title_panel_cleaningData_ <- "3) Limpieza de datos"
 title_filters_ <- "Filtros"
+titulo_select_tweets <- "Select tweets"
 title_profilebanners_ <- "Con imagen de portada"
 title_img_profile_ <- "Con imagen de perfil"
 title_location_ <- trans_format_text("Con ubicación","UTF-8","ISO-8859-1")
-title_hashtagF_ <- "Frecuencia de hashtag"
+title_hashtagF_ <- "Aplicar Top Hashtags"
 title_longtext_ <- trans_format_text("Mínimo de caracteres en el tweet:","UTF-8","ISO-8859-1")
-title_stopwords_ <- "Subir archivo csv con Stopwords"
+title_stopwords_ <- "Subir archivo csv con lista de Stopwords"
 title_btn_clean_ <- "Aplique Limpieza de Datos"
 #alerts
 alert_Textdataset <- "El dataset no tiene la columna 'text'"
@@ -83,7 +84,9 @@ btn_title_model <- "Aplicar"
 message_model <- "Aplique limpieza de datos"
 
 # ---------------------------------------------------------------
-
+title_panel_about <- "Acerca de"
+description_developer <- "- Herramienta SASTuit desarrollada por Anibal Armando Herrera Contreras."
+description_methodology_based <- trans_format_text("Metodología implementada basada en la investigación Twitter Opinion Analysis About Topic 5G Technology.","UTF-8","ISO-8859-1")
 #
 title_positive <-"Positivos"
 title_negative <- "Negativos"
