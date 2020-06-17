@@ -58,7 +58,7 @@ btn_label_rbind_ <- "Combina archivos"
 # ---------------------------------------------------------------
 title_panel_cleaningData_ <- "3) Limpieza de datos"
 title_filters_ <- "Filtros"
-titulo_select_tweets <- "Select tweets"
+titulo_select_tweets <- "Seleccionar tweets"
 title_profilebanners_ <- "Con imagen de portada"
 title_img_profile_ <- "Con imagen de perfil"
 title_location_ <- trans_format_text("Con ubicación","UTF-8","ISO-8859-1")
