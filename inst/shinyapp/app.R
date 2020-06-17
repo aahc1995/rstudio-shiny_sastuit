@@ -504,7 +504,7 @@ ui <- fluidPage(
       title = uiOutput("title_panel_about"),
       panel(
         
-        titlePanel(title ="Detalles"),
+        titlePanel(title =uiOutput("title_detailes")),
         tags$hr(),
 
         sidebarPanel(
@@ -538,8 +538,8 @@ server <- function(input, output, session) {
   source("www/files/funciones.R")
   
   # max size file upload csv: 1gb
-  (shiny.maxRequestSize = 1000 * 1024 ^ 2)
-  options(shiny.maxRequestSize = 1000 * 1024 ^ 2)
+  (shiny.maxRequestSize = 10000 * 1024 ^ 2)
+  options(shiny.maxRequestSize = 10000 * 1024 ^ 2)
   
   # default variables
   var_lang_sent <<- FALSE
@@ -822,6 +822,10 @@ server <- function(input, output, session) {
     output$title_panel_about = renderText({
       title_panel_about
     })
+    output$title_detailes = renderText({
+      title_detailes
+    })
+    
     
     
   # ---------------------------------------------------------------
