@@ -436,7 +436,7 @@ replace_country <- function(c_text){
       c_text[i] <- "belgium"
       i = i + 1
     }
-    else if(str_detect(texto, "argentina") || texto == "ushuaia argentina"){
+    else if(str_detect(texto, "argentina") || texto == "ushuaia argentina" || texto == "buenos aires argentina"){
       c_text[i] <- "argentina"
       i = i + 1
     }
